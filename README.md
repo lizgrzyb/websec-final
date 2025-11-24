@@ -1,11 +1,12 @@
 # hpp-guard (v0)
-** Web Security F25 Final Project **
-** Liz Grzyb, Mohamad Saaty, Ruohua Chen, Steven Chen **
+**Web Security F25 Final Project**
+
+**Liz Grzyb, Mohamad Saaty, Ruohua Chen, Steven Chen**
 
 Minimal Express middleware to defend against HTTP Parameter Pollution in query strings.
 
 ## Install
-npm i hpp-guard
+npm i hpp-guard (not working yet, not live, test locally for now)
 
 ## Use
 ```js
