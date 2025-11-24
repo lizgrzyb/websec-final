@@ -1,0 +1,49 @@
+# ---------------------------
+# Node & npm
+# ---------------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+
+# ---------------------------
+# Build output
+# ---------------------------
+dist/
+build/
+coverage/
+
+
+# ---------------------------
+# Environment / secrets
+# ---------------------------
+.env
+.env.*  
+.env.local
+.env.development
+.env.production
+.env.test
+
+# ---------------------------
+# OS & editor junk
+# ---------------------------
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# VS Code
+.vscode/
+.history/
+
+# JetBrains IDEs
+.idea/
+
+# ---------------------------
+# Logs
+# ---------------------------
+logs/
+*.log
+
