@@ -6,7 +6,7 @@
 Minimal Express middleware to defend against HTTP Parameter Pollution in query strings.
 
 ## Install
-npm i hpp-guard
+npm i hpp-guard (not working yet, not live, test locally for now)
 
 ## Use
 ```js
