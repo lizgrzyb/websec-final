@@ -11,7 +11,7 @@ npm i hpp-guard (not working yet, not live, test locally for now)
 ## Use
 ```js
 const express = require("express");
-const { hppLite } = require("hpp-guard");
+const { hppGuard } = require("hpp-guard");
 
 const app = express();
 
