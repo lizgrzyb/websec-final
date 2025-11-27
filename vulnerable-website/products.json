@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "name": "Laptop",
+    "price": 1000,
+    "description": "High-performance laptop for work and gaming",
+    "category": "electronics"
+  },
+  {
+    "id": 2,
+    "name": "Smartphone",
+    "price": 700,
+    "description": "Latest smartphone with advanced features",
+    "category": "electronics"
+  },
+  {
+    "id": 3,
+    "name": "Headphones",
+    "price": 150,
+    "description": "Wireless noise-cancelling headphones",
+    "category": "electronics"
+  },
+  {
+    "id": 4,
+    "name": "T-Shirt",
+    "price": 25,
+    "description": "Comfortable cotton t-shirt",
+    "category": "clothing"
+  },
+  {
+    "id": 5,
+    "name": "Coffee Mug",
+    "price": 10,
+    "description": "Ceramic coffee mug with premium finish",
+    "category": "home"
+  }
+]
