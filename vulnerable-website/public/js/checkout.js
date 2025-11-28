@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             <div class="debug-info">
                 <h4>Processing Information:</h4>
-                <pre>Products Received: ${JSON.stringify(debug.all_products, null, 2)}</pre>
+                <pre>Products Received: ${JSON.stringify(debug.all_product_ids, null, 2)}</pre>
                 <pre>Quantities Received: ${JSON.stringify(debug.all_quantities, null, 2)}</pre>
                 <pre>Discount Codes Received: ${JSON.stringify(debug.all_discounts, null, 2)}</pre>
                 <pre>Shipping Methods Received: ${JSON.stringify(debug.all_shipping_methods, null, 2)}</pre>
