@@ -65,6 +65,16 @@ document.addEventListener('DOMContentLoaded', function() {
             `;
         }
 
+        let engravingHTML = '';
+        if (details.engraving_colors && details.engraving_colors.length > 0) {
+            engravingHTML = `
+                <div class="detail-item">
+                    <span>Engraving Colors:</span>
+                    <span>${details.engraving_colors.join(', ')}</span>
+                </div>
+            `;
+        }
+
         resultsElement.innerHTML = `
             <div class="alert alert-success">
                 <h2>Order Processed Successfully!</h2>
@@ -88,6 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <span>Subtotal:</span>
                     <span>$${details.subtotal}</span>
                 </div>
+                ${engravingHTML}
                 <div class="detail-item">
                     <span>Discounts Applied:</span>
                     <span>${details.discount_codes.length > 0 ? details.discount_codes.join(', ') : 'None'}</span>
@@ -110,6 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <pre>Quantities Received: ${JSON.stringify(debug.all_quantities, null, 2)}</pre>
                 <pre>Discount Codes Received: ${JSON.stringify(debug.all_discounts, null, 2)}</pre>
                 <pre>Shipping Methods Received: ${JSON.stringify(debug.all_shipping_methods, null, 2)}</pre>
+                <pre>Engraving Colors Received: ${JSON.stringify(debug.all_engraving_colors, null, 2)}</pre>
             </div>
         `;
     } else {
@@ -118,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     resultsElement.style.display = 'block';
     resultsElement.scrollIntoView({ behavior: 'smooth' });
-    }
+}
 
     function showError(message) {
         resultsElement.innerHTML = `

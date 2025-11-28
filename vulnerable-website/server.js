@@ -41,6 +41,7 @@ app.post('/checkout/process', (req, res) => {
     let discountCodes = [];
     let shippingMethod = 'standard';
     let productId = null;
+    let engravingColors = [];
     
     // product_id
     if (Array.isArray(req.body.product_id)) {
@@ -77,6 +78,13 @@ app.post('/checkout/process', (req, res) => {
         shippingMethod = req.body.shipping_method || 'standard';
     }
     
+    // engraving colors
+    if (Array.isArray(req.body.engraving_colors)) {
+        engravingColors = req.body.engraving_colors.filter(color => color !== '');
+    } else if (req.body.engraving_colors && req.body.engraving_colors !== '') {
+        engravingColors = [req.body.engraving_colors];
+    }
+    
     let productName = 'Custom Product';
     if (productId) {
         const product = products.find(p => p.id === productId);
@@ -92,19 +100,13 @@ app.post('/checkout/process', (req, res) => {
     discountCodes.forEach(discount => {
         const beforeDiscount = total;
         if (discount === 'SAVE10') {
-
             total *= 0.9; 
             discountHistory.push(`SAVE10: $${beforeDiscount.toFixed(2)} → $${total.toFixed(2)}`);
-
         } else if (discount === 'SAVE20') {
-
             total *= 0.8; 
             discountHistory.push(`SAVE20: $${beforeDiscount.toFixed(2)} → $${total.toFixed(2)}`);
-
         } else if (discount === 'FREESHIP') {
-
             discountHistory.push(`FREESHIP: Free shipping applied`);
-
         }
     });
     
@@ -125,6 +127,7 @@ app.post('/checkout/process', (req, res) => {
             discount_history: discountHistory,
             shipping_method: shippingMethod,
             shipping_cost: shippingCost,
+            engraving_colors: engravingColors,
             subtotal: (basePrice * quantity).toFixed(2),
             final_total: total.toFixed(2)
         },
@@ -133,7 +136,8 @@ app.post('/checkout/process', (req, res) => {
             all_quantities: req.body.quantity,
             all_discounts: req.body.discount_code,
             all_shipping_methods: req.body.shipping_method,
-            all_product_ids: req.body.product_id
+            all_product_ids: req.body.product_id,
+            all_engraving_colors: req.body.engraving_colors
         }
     };
     

