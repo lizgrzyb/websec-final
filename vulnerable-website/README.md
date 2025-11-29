@@ -9,23 +9,18 @@ A full-featured e-commerce web application intentionally vulnerable to HTTP Para
 
 ### Project Structure
 ```
-shophub/
-├── server.js                   # Main server with subtle vulnerabilities
+vulnerable-website/
+├── server.js                  # Main server with subtle vulnerabilities
 ├── utils/
 │   └── helpers.js             # Server-side utilities (NOT exposed)
 ├── middleware/
 │   └── auth.js                # Authentication middleware
-├── public/                     # Static files (exposed to browser)
+├── public/                    # Static files (exposed to browser)
 │   ├── js/
-│   │   ├── checkout.js        # Checkout logic with debug info
-│   │   ├── shop.js
-│   │   ├── orders.js
-│   │   ├── admin.js
-│   │   ├── login.js
-│   │   └── register.js
+│   │   └── checkout.js        # Checkout logic with debug info
 │   └── css/
 │       └── style.css
-├── views/                      # HTML templates
+├── views/
 │   ├── index.html             # Landing page
 │   ├── login.html             # Login page
 │   ├── register.html          # Registration page
@@ -33,14 +28,12 @@ shophub/
 │   ├── checkout.html          # Checkout with engraving colors
 │   ├── orders.html            # Order history & refunds
 │   └── admin.html             # Admin dashboard
-├── package.json                # Dependencies
-├── products.json               # Product catalog
-├── Dockerfile                  # Docker image configuration
-├── docker-compose.yml          # Docker Compose setup
-├── attack-demo.js             # Detailed vulnerability explanations
-└── test-attacks.js            # Automated testing
+├── package.json               # Dependencies
+├── products.json              # Product catalog
+├── Dockerfile                 # Docker image configuration
+├── docker-compose.yml         # Docker Compose setup
+└── attacks.js                 # Automated testing
 ```
-
 ---
 
 ## Installation
