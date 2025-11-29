@@ -45,9 +45,9 @@ function hppGuard(options = {}) {
       //reject take priority over sanitize in this logic
       if (mode === "reject") {
         return res.status(400).json({
-          success: false,
-          error: "Duplicate query parameters detected",
-          pollutedArray,
+          status: "blocked",
+          message: "Duplicate HTTP parameters detected",
+          pollutedKeys:pollutedArray,
         });
       }
       function sanitizeReq(obj){
