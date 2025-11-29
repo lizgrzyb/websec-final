@@ -1,7 +1,7 @@
 {
     "name": "hpp-guard",
-    "version": "0.1.0",
-    "description": "A minimal Express middleware that enforces a global policy for HTTP Parameter Pollution (HPP).",
+    "version": "0.2.0",
+    "description": "An Express middleware that enforces a global policy for HTTP Parameter Pollution (HPP).",
     "main": "src/index.js",
     "keywords": [
         "express",
@@ -12,13 +12,13 @@
         "sanitization",
         "web-security"
     ],
-    "author": "Liz Grzyb, Mohamad Saaty",
+    "author": "Liz Grzyb, Mohamad Saaty, Ruohua Chen, Steven Chen",
     "license": "MIT",
     "repository": {
         "type": "git",
         "url": "https://github.com/lizgrzyb/websec-final.git"
     },
     "dependencies": {
-        "hpp-guard": "^0.1.0"
+        "hpp-guard": "^0.2.0"
     }
 }
