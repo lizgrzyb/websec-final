@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - ShopHub</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="navbar">
+        <div class="container">
+            <a href="/" class="logo">ShopHub Admin</a>
+            <div class="nav-links">
+                <a href="/admin">Dashboard</a>
+                <a href="/shop">Shop</a>
+                <a href="#" onclick="logout()">Logout</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Admin Dashboard</h2>
+        
+        <div class="admin-section">
+            <h3>Users</h3>
+            <div id="users"></div>
+        </div>
+
+        <div class="admin-section">
+            <h3>All Orders</h3>
+            <div id="orders"></div>
+        </div>
+
+        <div class="admin-section">
+            <h3>Bulk Refund</h3>
+            <form id="bulkRefundForm">
+                <div class="form-group">
+                    <label>Order IDs (comma separated)</label>
+                    <input type="text" name="order_ids" placeholder="1000,1001,1002" required>
+                </div>
+                <div class="form-group">
+                    <label>Recipient Email</label>
+                    <input type="email" name="recipient_email" required>
+                </div>
+                <button type="submit" class="btn">Process Bulk Refund</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        async function loadUsers() {
+            const res = await fetch('/api/admin/users');
+            const users = await res.json();
+            
+            const container = document.getElementById('users');
+            container.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Balance</th>
+                            <th>Orders</th>
+                            <th>Admin</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${users.map(u => `
+                            <tr>
+                                <td>${u.id}</td>
+                                <td>${u.username}</td>
+                                <td>${u.email}</td>
+                                <td>$${u.balance.toFixed(2)}</td>
+                                <td>${u.orderCount}</td>
+                                <td>${u.isAdmin ? 'Yes' : 'No'}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        async function loadOrders() {
+            const res = await fetch('/api/admin/orders');
+            const orders = await res.json();
+            
+            const container = document.getElementById('orders');
+            container.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>User</th>
+                            <th>Product</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${orders.map(o => `
+                            <tr>
+                                <td>${o.id}</td>
+                                <td>${o.username}</td>
+                                <td>${o.productName}</td>
+                                <td>$${o.total.toFixed(2)}</td>
+                                <td>${o.status}</td>
+                                <td>${new Date(o.createdAt).toLocaleDateString()}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        document.getElementById('bulkRefundForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            
+            const orderIds = formData.get('order_ids').split(',').map(id => id.trim());
+            
+            const res = await fetch('/api/admin/bulk-refund', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    order_ids: orderIds,
+                    recipient_email: formData.get('recipient_email')
+                })
+            });
+            
+            const data = await res.json();
+            
+            if (data.success) {
+                alert(`Bulk refund processed!\nOrders: ${data.refundedCount}\nTotal: $${data.totalAmount}\nRecipient: ${data.recipientEmail}`);
+                loadUsers();
+                loadOrders();
+                e.target.reset();
+            } else {
+                alert(data.error);
+            }
+        });
+
+        async function logout() {
+            await fetch('/api/logout', { method: 'POST' });
+            window.location.href = '/';
+        }
+
+        loadUsers();
+        loadOrders();
+    </script>
+</body>
+</html>

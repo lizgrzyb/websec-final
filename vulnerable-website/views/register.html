@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Register - ShopHub</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="navbar">
+        <div class="container">
+            <a href="/" class="logo">ShopHub</a>
+            <div class="nav-links">
+                <a href="/login">Login</a>
+                <a href="/register">Register</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="auth-box">
+            <h2>Register</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" required>
+                </div>
+                <input type="hidden" name="is_admin" value="false">
+                <button type="submit" class="btn">Register</button>
+            </form>
+            <p class="form-footer">Already have an account? <a href="/login">Login</a></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            
+            const res = await fetch('/api/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(Object.fromEntries(formData))
+            });
+            
+            const data = await res.json();
+            
+            if (data.success) {
+                alert('Registration successful!');
+                window.location.href = '/login';
+            } else {
+                alert(data.error);
+            }
+        });
+    </script>
+</body>
+</html>

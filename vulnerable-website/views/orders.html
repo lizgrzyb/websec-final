@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>My Orders - ShopHub</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="navbar">
+        <div class="container">
+            <a href="/" class="logo">ShopHub</a>
+            <div class="nav-links">
+                <a href="/shop">Shop</a>
+                <a href="/orders">My Orders</a>
+                <a href="#" onclick="logout()">Logout</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>My Orders</h2>
+        
+        <div id="orders"></div>
+
+        <div class="refund-box">
+            <h3>Request Refund</h3>
+            <form id="refundForm">
+                <div class="form-group">
+                    <label>Order ID</label>
+                    <input type="number" name="order_id" required>
+                </div>
+                <div class="form-group">
+                    <label>Refund Email</label>
+                    <input type="email" name="refund_email" required>
+                </div>
+                <button type="submit" class="btn">Request Refund</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let currentUserId;
+
+        async function loadOrders() {
+            const sessionRes = await fetch('/api/session');
+            const session = await sessionRes.json();
+            
+            if (!session.authenticated) {
+                window.location.href = '/login';
+                return;
+            }
+            
+            currentUserId = session.userId;
+            
+            const res = await fetch(`/api/orders?user_id=${session.userId}`);
+            const orders = await res.json();
+            
+            const container = document.getElementById('orders');
+            
+            if (orders.length === 0) {
+                container.innerHTML = '<p>No orders yet</p>';
+                return;
+            }
+            
+            container.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${orders.map(o => `
+                            <tr>
+                                <td>${o.id}</td>
+                                <td>${o.productName}</td>
+                                <td>${o.quantity}</td>
+                                <td>$${o.total.toFixed(2)}</td>
+                                <td>${o.status}</td>
+                                <td>${new Date(o.createdAt).toLocaleDateString()}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        document.getElementById('refundForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            
+            const res = await fetch('/api/refund', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(Object.fromEntries(formData))
+            });
+            
+            const data = await res.json();
+            
+            if (data.success) {
+                alert(`Refund processed! Amount: $${data.amount} sent to ${data.refundEmail}`);
+                loadOrders();
+                e.target.reset();
+            } else {
+                alert(data.error);
+            }
+        });
+
+        async function logout() {
+            await fetch('/api/logout', { method: 'POST' });
+            window.location.href = '/';
+        }
+
+        loadOrders();
+    </script>
+</body>
+</html>

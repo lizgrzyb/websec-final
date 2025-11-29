@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Shop - ShopHub</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="navbar">
+        <div class="container">
+            <a href="/" class="logo">ShopHub</a>
+            <div class="nav-links">
+                <a href="/shop">Shop</a>
+                <a href="/orders">My Orders</a>
+                <a href="#" onclick="logout()">Logout</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="user-info">
+            <p>Welcome, <strong id="username"></strong></p>
+            <p>Balance: $<span id="balance">0.00</span></p>
+        </div>
+
+        <h2>Products</h2>
+        <div id="products" class="products-grid"></div>
+    </div>
+
+    <script>
+        async function loadSession() {
+            const res = await fetch('/api/session');
+            const data = await res.json();
+            if (!data.authenticated) {
+                window.location.href = '/login';
+                return;
+            }
+            document.getElementById('username').textContent = data.username;
+            document.getElementById('balance').textContent = data.balance.toFixed(2);
+        }
+
+        async function loadProducts() {
+            const res = await fetch('/products');
+            const products = await res.json();
+            
+            const grid = document.getElementById('products');
+            grid.innerHTML = products.map(p => `
+                <div class="product-card">
+                    <h3>${p.name}</h3>
+                    <p class="price">$${p.price.toFixed(2)}</p>
+                    <p>${p.description}</p>
+                    <a href="/checkout?product_id=${p.id}" class="btn">Buy Now</a>
+                </div>
+            `).join('');
+        }
+
+        async function logout() {
+            await fetch('/api/logout', { method: 'POST' });
+            window.location.href = '/';
+        }
+
+        loadSession();
+        loadProducts();
+    </script>
+</body>
+</html>

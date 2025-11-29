@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - ShopHub</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="logo">ShopHub</a>
+            <div class="nav-links">
+                <a href="/shop">Shop</a>
+                <a href="/profile">Profile</a>
+                <a href="#" onclick="logout()">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2>My Profile</h2>
+        <div class="profile-box">
+            <p><strong>User ID:</strong> <span id="userId"></span></p>
+            <p><strong>Username:</strong> <span id="username"></span></p>
+            <p><strong>Email:</strong> <span id="email"></span></p>
+            <p><strong>Account Type:</strong> <span id="accountType"></span></p>
+            <p><strong>Balance:</strong> $<span id="balance"></span></p>
+            <p><strong>Total Orders:</strong> <span id="orderCount"></span></p>
+        </div>
+    </div>
+
+    <script>
+        async function loadProfile() {
+            const sessionRes = await fetch('/api/session');
+            const session = await sessionRes.json();
+            
+            if (!session.authenticated) {
+                window.location.href = '/login';
+                return;
+            }
+            
+            const res = await fetch(`/api/profile?user_id=${session.userId}`);
+            const profile = await res.json();
+            
+            document.getElementById('userId').textContent = profile.id;
+            document.getElementById('username').textContent = profile.username;
+            document.getElementById('email').textContent = profile.email;
+            document.getElementById('accountType').textContent = profile.isAdmin ? 'Administrator' : 'Regular User';
+            document.getElementById('balance').textContent = profile.balance.toFixed(2);
+            document.getElementById('orderCount').textContent = profile.orders.length;
+        }
+
+        async function logout() {
+            await fetch('/api/logout', { method: 'POST' });
+            window.location.href = '/';
+        }
+
+        loadProfile();
+    </script>
+</body>
+</html>

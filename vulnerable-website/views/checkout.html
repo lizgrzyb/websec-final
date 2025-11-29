@@ -1,30 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout - HPP Demo Store</title>
+    <title>Checkout - ShopHub</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <header>
+    <div class="navbar">
         <div class="container">
-            <h1>HPP Online Store</h1>
+            <a href="/" class="logo">ShopHub</a>
+            <div class="nav-links">
+                <a href="/shop">Shop</a>
+                <a href="/orders">My Orders</a>
+                <a href="#" onclick="logout()">Logout</a>
+            </div>
         </div>
-    </header>
+    </div>
 
     <div class="container">
-        <div class="checkout-form">
+        <div class="checkout-box">
             <h2>Checkout</h2>
             <form id="checkoutForm">
                 <div class="form-group">
-                    <label for="product_id">Select Product</label>
-                    <select id="product_id" name="product_id" class="form-control" onchange="updatePrice()">
+                    <label>Product</label>
+                    <select id="product_id" name="product_id" required onchange="updatePrice()">
+                        <option value="">Loading...</option>
                     </select>
                 </div>
+
                 <div class="form-group">
-                    <label for="engraving_colors">Engraving Colors (Select multiple with Ctrl/Cmd)</label>
-                    <select id="engraving_colors" name="engraving_colors" class="form-control" multiple size="4">
+                    <label>Engraving Colors (Select multiple with Ctrl/Cmd)</label>
+                    <select id="engraving_colors" name="engraving_colors" multiple size="4">
                         <option value="gold">Gold</option>
                         <option value="silver">Silver</option>
                         <option value="black">Black</option>
@@ -32,22 +38,22 @@
                         <option value="blue">Blue</option>
                         <option value="green">Green</option>
                     </select>
-                    <small style="color: #666; font-size: 0.8rem;">Hold Ctrl/Cmd to select multiple colors</small>
+                    <small style="color: #666; font-size: 0.85rem;">Hold Ctrl/Cmd to select multiple colors</small>
                 </div>
 
                 <div class="form-group">
-                    <label for="base_price">Base Price ($)</label>
-                    <input type="number" id="base_price" name="base_price" class="form-control" value="100" min="1" readonly>
+                    <label>Base Price</label>
+                    <input type="number" id="base_price" name="base_price" readonly>
                 </div>
 
                 <div class="form-group">
-                    <label for="quantity">Quantity</label>
-                    <input type="number" id="quantity" name="quantity" class="form-control" value="1" min="1" required>
+                    <label>Quantity</label>
+                    <input type="number" id="quantity" name="quantity" value="1" min="1" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="discount_code">Discount Code</label>
-                    <select id="discount_code" name="discount_code" class="form-control">
+                    <label>Discount Code</label>
+                    <select id="discount_code" name="discount_code">
                         <option value="">No discount</option>
                         <option value="SAVE10">SAVE10 (10% off)</option>
                         <option value="SAVE20">SAVE20 (20% off)</option>
@@ -56,68 +62,111 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="shipping_method">Shipping Method</label>
-                    <select id="shipping_method" name="shipping_method" class="form-control">
-                        <option value="standard">Standard Shipping ($5)</option>
-                        <option value="express">Express Shipping ($15)</option>
-                        <option value="overnight">Overnight Shipping ($25)</option>
+                    <label>Shipping Method</label>
+                    <select id="shipping_method" name="shipping_method">
+                        <option value="standard">Standard ($5)</option>
+                        <option value="express">Express ($15)</option>
+                        <option value="overnight">Overnight ($25)</option>
                     </select>
                 </div>
 
-                <button type="submit" class="btn btn-block">Process Order</button>
+                <button type="submit" class="btn">Place Order</button>
             </form>
         </div>
 
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <p>Processing your order...</p>
+        <div id="result" style="display: none;">
+            <h3>Order Successful!</h3>
+            <div id="orderDetails"></div>
         </div>
-
-        <div class="results" id="results" style="display: none;">
-            <!-- Results will be populated by JavaScript -->
-        </div>
-
     </div>
 
     <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const preselectedProductId = urlParams.get('product_id');
 
         async function loadProducts() {
-            try {
-                const response = await fetch('/products');
-                const products = await response.json();
-                
-                const productSelect = document.getElementById('product_id');
-                products.forEach(product => {
-                    const option = document.createElement('option');
-                    option.value = product.id;
-                    option.textContent = `${product.name} - $${product.price}`;
-                    productSelect.appendChild(option);
-                });
-            } catch (error) {
-                console.error('Error loading products:', error);
+            const res = await fetch('/products');
+            const products = await res.json();
+            
+            const select = document.getElementById('product_id');
+            select.innerHTML = products.map(p => 
+                `<option value="${p.id}" ${p.id == preselectedProductId ? 'selected' : ''}>${p.name} - $${p.price.toFixed(2)}</option>`
+            ).join('');
+            
+            if (preselectedProductId) {
+                updatePrice();
             }
         }
 
         function updatePrice() {
-            const productSelect = document.getElementById('product_id');
-            const basePriceInput = document.getElementById('base_price');
-            const selectedProductId = productSelect.value;
-            
-            if (selectedProductId) {
-
-                fetch(`/products/${selectedProductId}`)
-                    .then(response => response.json())
+            const productId = document.getElementById('product_id').value;
+            if (productId) {
+                fetch(`/products/${productId}`)
+                    .then(res => res.json())
                     .then(product => {
-                        basePriceInput.value = product.price;
-                    })
-                    .catch(error => {
-                        console.error('Error fetching product:', error);
+                        document.getElementById('base_price').value = product.price;
                     });
             }
         }
 
-        document.addEventListener('DOMContentLoaded', loadProducts);
+        document.getElementById('checkoutForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            
+            const data = {};
+            for (let [key, value] of formData.entries()) {
+                if (data[key]) {
+                    if (Array.isArray(data[key])) {
+                        data[key].push(value);
+                    } else {
+                        data[key] = [data[key], value];
+                    }
+                } else {
+                    data[key] = value;
+                }
+            }
+
+            const res = await fetch('/checkout/process', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams(data).toString()
+            });
+
+            const result = await res.json();
+
+            if (result.status === 'success') {
+                const details = result.order_details;
+                
+                let engravingHTML = '';
+                if (details.engraving_colors && details.engraving_colors.length > 0) {
+                    engravingHTML = `<p><strong>Engraving Colors:</strong> ${details.engraving_colors.join(', ')}</p>`;
+                }
+                
+                document.getElementById('orderDetails').innerHTML = `
+                    <p><strong>Order ID:</strong> ${details.order_id}</p>
+                    <p><strong>Product:</strong> ${details.product_name}</p>
+                    ${engravingHTML}
+                    <p><strong>Quantity:</strong> ${details.quantity}</p>
+                    <p><strong>Subtotal:</strong> $${details.subtotal}</p>
+                    ${details.discount_codes.length > 0 ? `<p><strong>Discounts:</strong> ${details.discount_codes.join(', ')}</p>` : ''}
+                    ${details.discount_history.length > 0 ? `<div class="discount-history">${details.discount_history.map(h => `<p>${h}</p>`).join('')}</div>` : ''}
+                    <p><strong>Shipping:</strong> ${details.shipping_method} ($${details.shipping_cost})</p>
+                    <p class="total"><strong>Total:</strong> $${details.final_total}</p>
+                    <p><strong>New Balance:</strong> $${details.new_balance}</p>
+                `;
+                document.getElementById('result').style.display = 'block';
+                e.target.style.display = 'none';
+            } else {
+                alert(result.error || 'Order failed');
+            }
+        });
+
+        async function logout() {
+            await fetch('/api/logout', { method: 'POST' });
+            window.location.href = '/';
+        }
+
+        loadProducts();
     </script>
-    <script src="/js/checkout.js"></script>
 </body>
 </html>

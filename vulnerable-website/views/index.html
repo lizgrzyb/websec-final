@@ -1,49 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HPP Demo Store</title>
+    <title>ShopHub</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <header>
+    <div class="navbar">
         <div class="container">
-            <h1>Demo Store</h1>
-            <p>Demonstration site for HTTP Parameter Pollution vulnerabilities.</p>
-        </Div>
-    </header>
-
-    <main class="container"> 
-
-        <div class="card">
-            <h2>Get Started</h2>
-            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                <a href="/checkout" class="btn">Go to Checkout Demo</a>
-                <a href="/products" class="btn">View Products</a>
+            <a href="/" class="logo">ShopHub</a>
+            <div class="nav-links">
+                <a href="/login">Login</a>
+                <a href="/register">Register</a>
             </div>
         </div>
+    </div>
 
-        <div class="card">
-            <h2>HTTP Parameter Pollution</h2>
-            <ul style="list-style-position: inside; margin-left: 1rem;">
-                <li>Multiple parameters with the same name are sent to the server</li>
-                <li>The application processes these parameters in an unexpected way</li>
-                <li>Attackers can manipulate application logic by sending duplicate parameters</li>
-            </ul>
-        </div>
-
-        <div class="card">
-            <h2>Demo Features</h2>
-            <ul style="list-style-position: inside; margin-left: 1rem;">
-                <li>Price manipulation through duplicate parameters</li>
-                <li>Discount code stacking</li>
-                <li>Shipping cost bypass</li>
-                <li>Tax calculation override</li>
-                <li>Real-time debug information</li>
-            </ul>
-        </div>
-    </main>
-
+    <div class="hero">
+        <h1>Welcome to ShopHub</h1>
+        <p>Your online electronics store</p>
+        <a href="/register" class="btn">Get Started</a>
+    </div>
 </body>
 </html>

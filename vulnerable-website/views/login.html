@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Login - ShopHub</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="navbar">
+        <div class="container">
+            <a href="/" class="logo">ShopHub</a>
+            <div class="nav-links">
+                <a href="/login">Login</a>
+                <a href="/register">Register</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="auth-box">
+            <h2>Login</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" required>
+                </div>
+                <button type="submit" class="btn">Login</button>
+            </form>
+            <p class="form-footer">Don't have an account? <a href="/register">Register</a></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            
+            const res = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(Object.fromEntries(formData))
+            });
+            
+            const data = await res.json();
+            
+            if (data.success) {
+                window.location.href = data.redirect;
+            } else {
+                alert(data.error);
+            }
+        });
+    </script>
+</body>
+</html>
