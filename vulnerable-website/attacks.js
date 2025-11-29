@@ -124,16 +124,16 @@ setTimeout(() => {
 
     normalRequest();
 
-}, 3000);
+}, 1000);
 
 setTimeout(() => {
 
     duplicateDiscounts();
 
-}, 3000);
+}, 4000);
 
 setTimeout(() => {
 
     multipleDuplicate();
 
-}, 3000);
+}, 7000);

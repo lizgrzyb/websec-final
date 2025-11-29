@@ -1,3 +1,7 @@
+//after making it an npm package
+//const { hppGuard } = require('hpp-guard');
+//before
+const { hppGuard } = require('../src2/index.js');
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
@@ -9,7 +13,18 @@ const PORT = 3000;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('public'));
-
+//HPP middleware here
+app.use(
+  hppGuard({
+    mode: "reject",              // or "first" / "last"
+    allowlist: null,             // check all params
+    multiValAllowed: ["engraving_colors"], // allow this one to be multi-valued
+    checkBody: true,
+    onPollution: (report, req) => {
+      console.log("[HPP DETECTED]", report, "URL:", req.originalUrl);
+    },
+  })
+);
 const products = JSON.parse(fs.readFileSync('products.json', 'utf8'));
 
 app.get('/checkout', (req, res) => {
